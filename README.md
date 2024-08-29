@@ -18,7 +18,7 @@ This project visualizes the solution of the N-Queens problem using PyQt5 for the
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your-username/n-queens-visualizer.git
+   git clone https://github.com/SuphalBochkar/N-Queens-Visualizer.git
    cd n-queens-visualizer
    ```
 
@@ -64,4 +64,4 @@ Feel free to submit issues or pull requests. Contributions are welcome!
 
 ## Demo
 
-You can view a demo of the application [here](https://github.com/user-attachments/assets/0b84ecc7-1cac-4d27-9c99-6366f65f0b4f)
+You can view a demo of the application [here](https://github.com/user-attachments/assets/)
