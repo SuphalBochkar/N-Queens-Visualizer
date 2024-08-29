@@ -1,89 +1,34 @@
 import pygame
 import time
+from colors import (
+    RED,
+    GREEN,
+    BLUE,
+    WHITE,
+    BLACK,
+    GREY,
+    YELLOW,
+    PURPLE,
+    ORANGE,
+    TURQUOISE,
+    BUTTON_COLOR,
+    BUTTON_HOVER_COLOR,
+)
+from spot import Spot
 
 
 def run_visualization(ROW, SPEED):
-    WIDTH = 600
-    WIN = pygame.display.set_mode((WIDTH, WIDTH))
-    pygame.display.set_caption("N-Queen Visualizer")
+    pygame.init()
+    pygame.font.init()
 
-    # Colors
-    RED = (231, 76, 60)  # Soft Red
-    GREEN = (46, 204, 113)  # Soft Green
-    BLUE = (52, 152, 219)  # Bright Blue
-    WHITE = (236, 240, 241)  # Light Gray
-    BLACK = (44, 62, 80)  # Dark Blue Gray
-    GREY = (189, 195, 199)  # Light Gray
-    YELLOW = (241, 196, 15)  # Bright Yellow
-    PURPLE = (155, 89, 182)  # Light Purple
-    ORANGE = (230, 126, 34)  # Warm Orange
-    TURQUOISE = (26, 188, 156)  # Soft Turquoise
+    WIDTH = 600
+    HEIGHT = 650
+    WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("N - Queens Visualizer Application")
 
     # Load the queen image
     QUEEN_IMAGE = pygame.image.load("./assets/queen.png")
     QUEEN_IMAGE = pygame.transform.scale(QUEEN_IMAGE, (WIDTH // ROW, WIDTH // ROW))
-
-    class Spot:
-        def __init__(self, row, col, width, total_rows):
-            self.row = row
-            self.col = col
-            self.x = row * width
-            self.y = col * width
-            self.total_rows = total_rows
-            self.width = width
-            self.color = WHITE
-            self.neighbors = []
-            self.is_queen = False
-
-        def get_pos(self):
-            return self.row, self.col
-
-        def is_closed(self):
-            return self.color == RED
-
-        def is_open(self):
-            return self.color == GREEN
-
-        def is_barrier(self):
-            return self.is_queen
-
-        def is_checking(self):
-            return self.color == BLUE
-
-        def is_reset(self):
-            return self.color == WHITE and not self.is_queen
-
-        def make_closed(self):
-            self.color = RED
-
-        def make_open(self):
-            self.color = GREEN
-
-        def make_barrier(self):
-            self.is_queen = True
-
-        def make_checking(self):
-            self.color = BLUE
-
-        def make_reset(self):
-            self.is_queen = False
-            self.color = WHITE
-
-        def draw(self, win):
-            if (self.row + self.col) % 2 == 0:
-                color = WHITE
-            else:
-                color = BLACK
-            pygame.draw.rect(win, color, (self.x, self.y, self.width, self.width))
-            if self.is_queen:
-                win.blit(QUEEN_IMAGE, (self.x, self.y))
-            elif self.color != WHITE:
-                pygame.draw.rect(
-                    win, self.color, (self.x, self.y, self.width, self.width)
-                )
-
-        def __lt__(self, other):
-            return False
 
     def isSafe(draw, grid, row, col):
         temp = grid[row][col].color
@@ -157,20 +102,6 @@ def run_visualization(ROW, SPEED):
         grid[row][col].color = temp
         return True
 
-    def solveNQUtil(draw, grid, col):
-        if col >= ROW:
-            return True
-
-        for i in range(ROW):
-            if isSafe(draw, grid, i, col):
-                grid[i][col].make_barrier()
-                draw()
-                if solveNQUtil(draw, grid, col + 1):
-                    return True
-                grid[i][col].make_reset()
-                draw()
-        return False
-
     def solveNQAllSolutions(draw, grid, col):
         if col >= ROW:
             draw()
@@ -194,7 +125,8 @@ def run_visualization(ROW, SPEED):
         for i in range(rows):
             grid.append([])
             for j in range(rows):
-                spot = Spot(i, j, gap, rows)
+                # spot = Spot(i, j, gap, rows)
+                spot = Spot(i, j, gap, rows, QUEEN_IMAGE)
                 grid[i].append(spot)
         return grid
 
@@ -205,12 +137,28 @@ def run_visualization(ROW, SPEED):
             for j in range(rows):
                 pygame.draw.line(win, GREY, (j * gap, 0), (j * gap, width))
 
+    def draw_buttons(win):
+        # Draw Start Button
+        pygame.draw.rect(win, BUTTON_COLOR, (50, 10, 100, 30))
+        # Draw Stop Button
+        pygame.draw.rect(win, BUTTON_COLOR, (450, 10, 100, 30))
+
+        # Button Text
+        font = pygame.font.SysFont("Arial", 20)
+        start_text = font.render("Start", True, WHITE)
+        stop_text = font.render("Stop", True, WHITE)
+
+        # Render text on buttons
+        win.blit(start_text, (75, 15))
+        win.blit(stop_text, (475, 15))
+
     def draw(win, grid, rows, width):
         win.fill(WHITE)
         for row in grid:
             for spot in row:
                 spot.draw(win)
         draw_grid(win, rows, width)
+        # draw_buttons(win)
         pygame.display.flip()
         pygame.time.wait(SPEED)
 
@@ -224,14 +172,14 @@ def run_visualization(ROW, SPEED):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
-                if started:
-                    continue
-                if pygame.mouse.get_pressed()[
-                    0
-                ]:  # If left mouse button pressed, start algo
+                mouse_buttons = pygame.mouse.get_pressed()
+                if mouse_buttons[0] and not started:
+                    print("Clicked on left button")
                     started = True
                     solveNQAllSolutions(lambda: draw(win, grid, ROW, width), grid, 0)
-
+                elif mouse_buttons[2]:
+                    print("Clicked on right button")
+                    pygame.quit()
         pygame.quit()
 
     main(WIN, WIDTH)
