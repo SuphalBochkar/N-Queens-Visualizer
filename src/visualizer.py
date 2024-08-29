@@ -11,12 +11,12 @@ def run_visualization(ROW, SPEED):
     RED = (231, 76, 60)  # Soft Red
     GREEN = (46, 204, 113)  # Soft Green
     BLUE = (52, 152, 219)  # Bright Blue
-    YELLOW = (241, 196, 15)  # Bright Yellow
     WHITE = (236, 240, 241)  # Light Gray
     BLACK = (44, 62, 80)  # Dark Blue Gray
+    GREY = (189, 195, 199)  # Light Gray
+    YELLOW = (241, 196, 15)  # Bright Yellow
     PURPLE = (155, 89, 182)  # Light Purple
     ORANGE = (230, 126, 34)  # Warm Orange
-    GREY = (189, 195, 199)  # Light Gray
     TURQUOISE = (26, 188, 156)  # Soft Turquoise
 
     # Load the queen image
